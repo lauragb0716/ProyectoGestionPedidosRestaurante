@@ -1,0 +1,51 @@
+@startuml
+
+Entity Corrientazo{
+    - Integer precio
+}
+
+Entity Pedido {
+    + Integer calcularValorPedido()
+}
+Entity OpcionSopa{
+    - String nombre
+}
+Entity OpcionPrincipio{
+    - String nombre
+}
+Entity OpcionCarne{
+    - String nombre
+}
+Entity OpcionEnsalada{
+    - String nombre
+}
+Entity OpcionJugo{
+    - String nombre
+}
+Entity Adicional{
+    - String nombre
+    - Integer precio
+}
+
+Entity Mesa{
+    - String numero
+    + Integer calcularValorMesa()
+    + Integer pagar (Integer efectivo)
+}
+enum EstadoPedido{
+    SIN_ENTREGAR
+    PENDIENTE_COBRAR
+}
+
+
+Mesa "1" o-right- "*" Pedido
+Corrientazo -- "1" OpcionSopa
+Corrientazo -- "1" OpcionPrincipio
+Corrientazo -- "1" OpcionCarne
+Corrientazo -- "0..1" OpcionEnsalada
+Corrientazo -- "1" OpcionJugo
+Pedido *-- "0..*" Adicional
+Pedido *-- Corrientazo
+Pedido .right.> EstadoPedido
+
+@enduml
