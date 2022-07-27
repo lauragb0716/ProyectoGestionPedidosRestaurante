@@ -1,51 +1,80 @@
 @startuml "Diagrama Relacional"
 
-Entity Corrientazo{
-    - Integer precio
+Entity Mesa{
+    id: Integer <<PK>>
+    --
+    numero: varchar(10) <<NN>> <<UQ>>
 }
 
 Entity Pedido {
-    + Integer calcularValorPedido()
+    id: Integer <<PK>>
+    --
+    cliente: varchar(100) <<NN>>
+    estado: varchar(100) <<NN>>
+    --
+    id_mesa: Integer <<FK>> <<NN>>
 }
+
+Entity Adicional{
+    id: Integer <<PK>> 
+    --
+    nombre: varchar(100) <<NN>> <<UQ>>
+    precio: Integer <<NN>>
+}
+
+Entity PedidoAdicional{
+    id_pedido: Integer <<PK>> <<FK>>
+    id_adicional: Integer <<PK>> <<FK>>
+}
+
+Entity Corrientazo{
+    id_pedido: Integer <<PK>> <<FK>>
+    --
+    precio: Integer <<NN>>
+    --
+    id_sopa: Integer <<FK>> <<NN>>
+    id_principio: Integer <<FK>> <<NN>>
+    id_carne: Integer <<FK>> <<NN>>
+    id_ensalada: Integer <<FK>>
+    id_juego: Integer <<FK>> <<NN>>
+}
+
 Entity OpcionSopa{
-    - String nombre
+    id: Integer <<PK>>
+    --
+    nombre varchar(100) <<NN>>
 }
 Entity OpcionPrincipio{
-    - String nombre
+    id: Integer <<PK>>
+    --
+    nombre varchar(100) <<NN>>
 }
 Entity OpcionCarne{
-    - String nombre
+    id: Integer <<PK>>
+    --
+    nombre varchar(100) <<NN>>
 }
 Entity OpcionEnsalada{
-    - String nombre
+    id: Integer <<PK>>
+    --
+    nombre varchar(100) <<NN>>
 }
 Entity OpcionJugo{
-    - String nombre
-}
-Entity Adicional{
-    - String nombre
-    - Integer precio
+    id: Integer <<PK>>
+    --
+    nombre varchar(100) <<NN>>
 }
 
-Entity Mesa{
-    - String numero
-    + Integer calcularValorMesa()
-    + Integer pagar (Integer efectivo)
-}
-enum EstadoPedido{
-    SIN_ENTREGAR
-    PENDIENTE_COBRAR
-}
+Mesa ||--o{Pedido
+Pedido ||-left-|{PedidoAdicional
+Adicional ||--|{PedidoAdicional
 
+Pedido ||-right-|| Corrientazo
 
-Mesa "1" o-right- "*" Pedido
-Corrientazo -- "1" OpcionSopa
-Corrientazo -- "1" OpcionPrincipio
-Corrientazo -- "1" OpcionCarne
-Corrientazo -- "0..1" OpcionEnsalada
-Corrientazo -- "1" OpcionJugo
-Pedido *-- "0..*" Adicional
-Pedido *-- Corrientazo
-Pedido .right.> EstadoPedido
+Corrientazo }|--|| OpcionSopa
+Corrientazo }|--|| OpcionPrincipio
+Corrientazo }|--|| OpcionCarne
+Corrientazo }|--o| OpcionEnsalada
+Corrientazo }|--|| OpcionJugo
 
 @enduml
