@@ -1,5 +1,6 @@
 package co.edu.utp.misiontic2022.lgutierrez;
 
+import co.edu.utp.misiontic2022.lgutierrez.exception.PagoException;
 import co.edu.utp.misiontic2022.lgutierrez.modelo.*;
 
 /**
@@ -39,7 +40,7 @@ public final class App {
         var efectivo = 30_000;
         try {
             System.out.printf("Se paga con $ %,d y le devuelve $ %,d %n", efectivo, mesa.pagar(efectivo));
-        } catch (PagoExcepcion e) {
+        } catch (PagoException e) {
             System.err.printf("Se paga con $ %,d y %s. %n", efectivo, e.getMessage());
         }
 
