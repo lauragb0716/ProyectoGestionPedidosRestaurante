@@ -3,9 +3,8 @@ package co.edu.utp.misiontic2022.lgutierrez.modelo;
 import java.util.ArrayList;
 import java.util.List;
 
-import co.edu.utp.misiontic2022.lgutierrez.exception.PagoException;
-
 public class Mesa {
+    private Integer id;
     private String numero;
     private List<Pedido> pedidos;
 
@@ -28,25 +27,30 @@ public class Mesa {
         return total;
     }
 
-    public Integer pagar(Integer efectivo) throws PagoException{
-        // Valido si es suficiente para pagar
-        var total = calcularValor();
-        if (efectivo < total) {
-            throw new PagoException("El efectivo no es suficiente para cubrir la cuenta");
-        }
-
-        // Elimino los pedidos de la mesa
-        pedidos.clear();
-
-        // Retorna la devuelta
-        return efectivo - total;
+    public Integer getId() {
+        return id;
     }
 
+    public void setId(Integer id) {
+        this.id = id;
+    }
+    
     public String getNumero() {
         return numero;
     }
 
-    
+    public List<Pedido> getPedidos() {
+        return pedidos;
+    }
+
+    @Override
+    public String toString() {
+        return "Mesa [numero=" + numero + "]";
+    }
+
+    public void borrarPedidos() {
+        pedidos.clear();
+    }
 
     
 

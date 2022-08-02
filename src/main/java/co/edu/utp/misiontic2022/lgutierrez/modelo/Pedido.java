@@ -47,6 +47,14 @@ public class Pedido {
 
     public Corrientazo getAlmuerzo() {
         return almuerzo;
+    }
+
+    @Override
+    public String toString() {
+        return "Pedido [ cliente=" + cliente + ", almuerzo=" + almuerzo + ", adicionales=" + adicionales +  ", estado="
+                + estado + "]";
     }  
+
+    
     
 }
