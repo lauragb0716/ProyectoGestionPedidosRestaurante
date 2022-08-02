@@ -58,7 +58,7 @@ CREATE TABLE OpcionJugo (
 );
 
 CREATE TABLE Corrientazo(
-    id INTEGER PRIMARY KEY,
+    id_pedido INTEGER PRIMARY KEY,
     precio INTEGER, 
     id_sopa INTEGER,
     id_principio INTEGER,
@@ -70,5 +70,5 @@ CREATE TABLE Corrientazo(
     CONSTRAINT Corrientazo_id_principio_pedido_PK FOREIGN KEY(id_principio) REFERENCES OpcionPrincipio(id),
     CONSTRAINT Corrientazo_id_carne_pedido_PK FOREIGN KEY(id_carne) REFERENCES OpcionCarne(id),
     CONSTRAINT Corrientazo_id_ensalada_pedido_PK FOREIGN KEY(id_ensalada) REFERENCES OpcionEnsalada(id),
-    CONSTRAINT Corrientazo_id_jugo_pedido_PK FOREIGN KEY(id_jugo) REFERENCES OpcionJugo(id),
+    CONSTRAINT Corrientazo_id_jugo_pedido_PK FOREIGN KEY(id_jugo) REFERENCES OpcionJugo(id)
 );
