@@ -62,6 +62,10 @@ public class Pedido {
         return almuerzo;
     }
 
+    public void setAdicionales(List<Adicional> adicionales) {
+        this.adicionales = adicionales;
+    }
+
     @Override
     public String toString() {
         return "Pedido [ cliente=" + cliente + ", almuerzo=" + almuerzo + ", adicionales=" + adicionales +  ", estado="

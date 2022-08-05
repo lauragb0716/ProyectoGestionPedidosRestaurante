@@ -55,9 +55,9 @@ public class PedidoDao {
                 var pedido = new Pedido(rset.getString("cliente"), almuerzo);
                 pedido.setId(rset.getInt("id"));
                 //Lo que hace el valueOf es coger la cadena y verificar si en el Enum coincide con esa cadena y asignarle ese valor 
-                pedido.setEstado(EstadoPedido.valueOf(rset.getString("estado")));
-                
-                
+                pedido.setEstado(EstadoPedido.valueOf(rset.getString("estado")));                
+                //Se listan los adicionales
+                pedido.setAdicionales(listarAdicionales(pedido.getId()));
                 respuesta.add(pedido);
             }
 
@@ -67,6 +67,43 @@ public class PedidoDao {
                 rset.close();
             }
             if (stmt != null ) {
+                stmt.close();
+            }
+        }
+
+        return respuesta;
+    }
+
+    private List<Adicional> listarAdicionales (Integer idPedido) throws SQLException{
+        List<Adicional> respuesta = null;
+
+        PreparedStatement stmt = null;
+        ResultSet rset = null;
+
+        try{
+            var sql = "SELECT p.id AS id_pedido, a.id AS id_adicional, a.nombre AS nombre_adicional, a.precio AS precio_adicional " +
+                      " FROM Pedido p "+
+                      " LEFT JOIN PedidoAdicional pa ON (pa.id_pedido = p.id)" +
+                      " LEFT JOIN Adicional a ON (pa.id_adicional = a.id)" +
+                      " WHERE p.id = ?;"; 
+                      
+            stmt = JDBCUtilities.getConnection().prepareStatement(sql);
+            stmt.setInt(1, idPedido);
+            rset = stmt.executeQuery();
+
+            respuesta = new ArrayList<>();
+
+            while(rset.next()){
+                var adicional = new Adicional(rset.getString("nombre_adicional"), rset.getInt("precio_adicional"));
+                adicional.setId(rset.getInt("id_adicional"));
+                respuesta.add(adicional);
+            }
+
+        } finally{
+            if(rset != null){
+                rset.close();
+            }
+            if (stmt != null) {
                 stmt.close();
             }
         }
