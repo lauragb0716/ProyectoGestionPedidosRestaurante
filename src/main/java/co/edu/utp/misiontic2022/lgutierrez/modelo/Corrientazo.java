@@ -1,6 +1,8 @@
 package co.edu.utp.misiontic2022.lgutierrez.modelo;
 
 public class Corrientazo {
+
+    private Integer id;
     private Integer precio;
     private OpcionSopa sopa;
     private OpcionPrincipio principio;
@@ -24,6 +26,14 @@ public class Corrientazo {
         this.carne = carne;
         this.ensalada = ensalada;
         this.jugo = jugo;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public Integer getPrecio() {

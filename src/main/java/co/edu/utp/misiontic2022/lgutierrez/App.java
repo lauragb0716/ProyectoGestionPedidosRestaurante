@@ -15,9 +15,8 @@ public final class App {
     public static void main(String[] args) {
         try (var sc = new Scanner(System.in)) {
             var controlador = new RestauranteContolador(sc);
-            controlador.cargarBaseDatos();
             controlador.iniciarAplicacion();
-            
+             
 
         } catch (Exception e) {
             System.err.println("Ocurrió un error en la aplicación!!");

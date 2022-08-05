@@ -17,15 +17,6 @@ public class Mesa {
         this.pedidos.add(pedido);
     }
 
-    public Integer calcularValor(){
-        var total = pedidos.stream()
-        .filter(pedido -> pedido.getEstado() == EstadoPedido.PENDIENTE_COBRAR)
-        .map(pedido -> pedido.calcularValor())
-        .reduce((a, b) -> a + b)
-        .orElse(0);
-
-        return total;
-    }
 
     public Integer getId() {
         return id;

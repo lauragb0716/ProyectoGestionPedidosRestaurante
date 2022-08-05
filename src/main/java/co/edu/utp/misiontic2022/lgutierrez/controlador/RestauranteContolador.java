@@ -3,15 +3,11 @@ package co.edu.utp.misiontic2022.lgutierrez.controlador;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 import co.edu.utp.misiontic2022.lgutierrez.exception.PagoException;
 import co.edu.utp.misiontic2022.lgutierrez.modelo.*;
-import co.edu.utp.misiontic2022.lgutierrez.modelo.dao.CarneDao;
-import co.edu.utp.misiontic2022.lgutierrez.modelo.dao.EnsaladaDao;
-import co.edu.utp.misiontic2022.lgutierrez.modelo.dao.JugoDao;
-import co.edu.utp.misiontic2022.lgutierrez.modelo.dao.MesaDao;
-import co.edu.utp.misiontic2022.lgutierrez.modelo.dao.PrincipioDao;
-import co.edu.utp.misiontic2022.lgutierrez.modelo.dao.SopaDao;
+import co.edu.utp.misiontic2022.lgutierrez.modelo.dao.*;
 import co.edu.utp.misiontic2022.lgutierrez.vista.*;
 
 public class RestauranteContolador {
@@ -21,64 +17,30 @@ public class RestauranteContolador {
     private PedidoVista pedidoVista;
 
     private MesaDao mesaDao;
-    private SopaDao sopaDao;
-    private PrincipioDao principioDao;
-    private CarneDao carneDao;
-    private EnsaladaDao ensaladaDao;
-    private JugoDao jugoDao;
+    //Se utiliza la plantilla de OpcionAlimentoDao para crear los objetos que se requieren
+    private OpcionAlimentoDao<OpcionSopa> opcionSopaDao;
+    private OpcionAlimentoDao<OpcionPrincipio> opcionPrincipioDao;
+    private OpcionAlimentoDao<OpcionCarne> opcionCarneDao;
+    private OpcionAlimentoDao<OpcionEnsalada> opcionEnsaladaDao;
+    private OpcionAlimentoDao<OpcionJugo> opcionJugoDao;
+
+    private PedidoDao pedidoDao;
 
     public RestauranteContolador(Scanner sc) {
         this.menuPrincipal = new MenuPrincipal(sc, this);
         this.mesaVista = new MesaVista(sc, this);
         this.pedidoVista = new PedidoVista(sc, this);
         
+        //Siempre los objetos se deben inicializar en el contructor
         this.mesaDao = new MesaDao();
-        this.sopaDao = new SopaDao();
-        this.principioDao = new PrincipioDao();
-        this.carneDao = new CarneDao();
-        this.ensaladaDao = new EnsaladaDao();
-        this.jugoDao = new JugoDao();
-    }
 
-    // TODO: Solo para las pruebas
-    public void cargarBaseDatos() throws SQLException {
-        /*mesaDao.guardar(new Mesa("01"));
-        mesaDao.guardar(new Mesa("02"));
-        mesaDao.guardar(new Mesa("03"));
-        mesaDao.guardar(new Mesa("04"));
-        mesaDao.guardar(new Mesa("05"));
-        mesaDao.guardar(new Mesa("06"));
-        mesaDao.guardar(new Mesa("07"));*/
-
-        /*sopaDao.guardar(new OpcionSopa("Pasta"));
-        sopaDao.guardar(new OpcionSopa("Sancocho"));
-        sopaDao.guardar(new OpcionSopa("Crema ahuyama"));
-        sopaDao.guardar(new OpcionSopa("Patacón"));
-        sopaDao.guardar(new OpcionSopa("Verduras"));
-        sopaDao.guardar(new OpcionSopa("Ajiaco"));*/
-
-        /*principioDao.guardar(new OpcionPrincipio("Frijoles"));
-        principioDao.guardar(new OpcionPrincipio("Lentejas"));
-        principioDao.guardar(new OpcionPrincipio("Papa guisada"));
-        principioDao.guardar(new OpcionPrincipio("Espaguettis"));*/
-
-        /*carneDao.guardar(new OpcionCarne("Res a la plancha"));
-        carneDao.guardar(new OpcionCarne("Cerdo a la plancha"));
-        carneDao.guardar(new OpcionCarne("Pechuga a la plancha"));
-        carneDao.guardar(new OpcionCarne("Chicharrón"));
-        carneDao.guardar(new OpcionCarne("Carne molida"));
-        carneDao.guardar(new OpcionCarne("En Bistec"));*/
-
-        /*ensaladaDao.guardar(new OpcionEnsalada("Solo tomate"));
-        ensaladaDao.guardar(new OpcionEnsalada("Tomate y cebolla"));
-        ensaladaDao.guardar(new OpcionEnsalada("Dulce"));
-        ensaladaDao.guardar(new OpcionEnsalada("Remolacha y zanahoria"));*/
-
-        /*jugoDao.guardar(new OpcionJugo("Limonada"));
-        jugoDao.guardar(new OpcionJugo("Guayaba"));
-        jugoDao.guardar(new OpcionJugo("Mora"));
-        jugoDao.guardar(new OpcionJugo("Lulo"));
-        jugoDao.guardar(new OpcionJugo("Maracuyá"));*/
+        this.opcionSopaDao = new OpcionAlimentoDao<>("OpcionSopa");
+        this.opcionPrincipioDao = new OpcionAlimentoDao<>("OpcionPrincipio");
+        this.opcionCarneDao = new OpcionAlimentoDao<>("OpcionCarne");
+        this.opcionEnsaladaDao = new OpcionAlimentoDao<>("OpcionEnsalada");
+        this.opcionJugoDao = new OpcionAlimentoDao<>("OpcionJugo");
+        
+        this.pedidoDao = new PedidoDao();
     }
 
     public List<Mesa> getMesas() throws SQLException {
@@ -86,23 +48,67 @@ public class RestauranteContolador {
     }
 
     public List<OpcionSopa> getSopas() throws SQLException {
-        return sopaDao.listar();
+        //Defino la función que recibe como parametro el método listar.
+        //Se define una lambda que recibe un ResultSet(rset).
+        return opcionSopaDao.listar(rset -> {
+            //Como las lambdas no pueden propagar excepciones, se debe colocar un bloque try-catch
+            try{
+                //Se define lo que se desea hacer con la función del método, creando un objeto del tipo de la opción que se requiere y se le agregan los atributos
+                var opcion = new OpcionSopa(rset.getString("nombre"));
+                opcion.setId(rset.getInt("id"));
+                return opcion;
+            } catch(SQLException e){
+                return null;
+            }
+        });
     }
 
     public List<OpcionPrincipio> getPrincipios() throws SQLException {
-        return principioDao.listar();
+        return opcionPrincipioDao.listar(rset -> {
+            try{
+                var opcion = new OpcionPrincipio(rset.getString("nombre"));
+                opcion.setId(rset.getInt("id"));
+                return opcion;
+            } catch(SQLException e){
+                return null;
+            }
+        });
     }
 
     public List<OpcionCarne> getCarnes() throws SQLException {
-        return carneDao.listar();
+        return opcionCarneDao.listar(rset -> {
+            try{
+                var opcion = new OpcionCarne(rset.getString("nombre"));
+                opcion.setId(rset.getInt("id"));
+                return opcion;
+            } catch(SQLException e){
+                return null;
+            }
+        });
     }
 
     public List<OpcionEnsalada> getEnsaladas() throws SQLException {
-        return ensaladaDao.listar();
+        return opcionEnsaladaDao.listar(rset -> {
+            try{
+                var opcion = new OpcionEnsalada(rset.getString("nombre"));
+                opcion.setId(rset.getInt("id"));
+                return opcion;
+            } catch(SQLException e){
+                return null;
+            }
+        });
     }
 
     public List<OpcionJugo> getJugos() throws SQLException {
-        return jugoDao.listar();
+        return opcionJugoDao.listar(rset -> {
+            try{
+                var opcion = new OpcionJugo(rset.getString("nombre"));
+                opcion.setId(rset.getInt("id"));
+                return opcion;
+            } catch(SQLException e){
+                return null;
+            }
+        });
     }
 
     public void crearMesa() throws SQLException {
@@ -117,56 +123,91 @@ public class RestauranteContolador {
 
     }
 
-    public void agregarPedido(Mesa mesa) throws SQLException {
-        // Pedir al usuario la información del pedido
+    public void agregarPedido(Mesa mesa) {
+        try{
+            // Pedir al usuario la información del pedido
         var pedido = pedidoVista.pedirInformacionPedido();
 
         // Agregar el pedido a la mesa
-        mesa.agregarPedido(pedido);
+        pedidoDao.guardar(mesa, pedido);
 
         // Mostrar confirmación de agregar el pedido
         pedidoVista.mostrarMensaje("Se ha recibido el pedido de " + pedido.getCliente());
+        } catch(SQLException e){
+            System.err.println("Error accediendo a la base de datos: " + e.getMessage());
+        }
     }
 
     public Mesa consultarMesa() throws SQLException {
         return mesaVista.consultarMesa();
     }
 
-    public void entregarPedido(Mesa mesa) {
-        // Seleccionar pedido de mesa
-        Pedido pedido = mesaVista.seleccionarPedido(mesa);
+    public void entregarPedido(Mesa mesa){
+        try {
+            // Seleccionar pedido de mesa
+            //Se filtran los pedidos que están pendientes sin entregar y los convierte en una lista
+            var pedidos = pedidoDao.listar(mesa).stream()
+                .filter(p -> p.getEstado() == EstadoPedido.SIN_ENTREGAR)
+                .collect(Collectors.toList());
+            Pedido pedido = mesaVista.seleccionarPedido(pedidos);
 
-        // Marcar como entregado el pedido
-        pedido.entregarPedido();
+            // Marcar como entregado el pedido internamente en el sistema
+            pedido.entregarPedido();
+            // Se envía el pedido cambiado como parámetro al metodo que actualiza la base de datos.
+            pedidoDao.entregarPedido(pedido);
+            pedidoVista.mostrarMensaje(String.format("El pedido de %s fue entregado", pedido.getCliente()));
+        } catch (Exception e) {
+            System.err.println("Error entregando pedidos: " + e.getMessage());
+        }
+        
     }
 
     public void mostrarPedidos(Mesa mesa) {
-        mesaVista.mostrarPedidos(mesa);
+        try{
+            var pedidos = pedidoDao.listar(mesa);
+            mesaVista.mostrarPedidos(pedidos);
+        } catch(SQLException e){
+            System.err.println("Error obteniendo pedidos: " + e.getMessage());
+        }
+        
     }
 
     public void agregarAdicional() {
+        //TODO: Realizar método
     }
 
     public void pagarCuenta(Mesa mesa) {
-        var efectivo = mesaVista.leerValorEfectivo();
+        try{
+            //Traigo los pedidos de la base de datos
+            var pedidos = pedidoDao.listar(mesa);
+            //Realizo una lambda para calcular el total de cada pedido
+            var total = pedidos.stream()
+            .filter(pedido -> pedido.getEstado() == EstadoPedido.PENDIENTE_COBRAR)
+            .map(pedido -> pedido.calcularValor())
+            .reduce((a, b) -> a + b)
+            .orElse(0);
+            //Muestro el valor del pedido
+            pedidoVista.mostrarMensaje(String.format("La cuenta es: $ %,d", total));
+            //Solicito el efectivo
+            var efectivo = mesaVista.leerValorEfectivo();
 
-        try {
-            // Valido si es suficiente para pagar
-            var total = mesa.calcularValor();
-            if (efectivo < total) {
-                throw new PagoException("El efectivo no es suficiente para cubrir la cuenta");
-            }
+            try {
+                // Valido si es suficiente para pagar
+                if (efectivo < total) {
+                    throw new PagoException("El efectivo no es suficiente para cubrir la cuenta");
+                }
+                // Elimino los pedidos de la mesa en la base de datos
+                pedidoDao.eliminarPedidosDeMesa(mesa);              
 
-            // Elimino los pedidos de la mesa
-            mesa.borrarPedidos();
-
-            // Retorna la devuelta
-            mesaVista.mostrarMensaje(String.format("La devuelta son: $ %,d", (efectivo-total)));
-        } catch (PagoException e) {
-            mesaVista.mostrarMensaje(e.getMessage());
-        }        
+                // Retorna la devuelta
+                mesaVista.mostrarMensaje(String.format("La devuelta son: $ %,d", (efectivo-total)));
+            } catch (PagoException e) {
+                mesaVista.mostrarMensaje(e.getMessage());
+            }        
+        } catch(SQLException e){
+            System.err.println("Error al pagar la cuenta: " + e.getMessage());
+        }
     }
-
     public void iniciarAplicacion() throws SQLException {
         menuPrincipal.iniciarAplicacion();
     }
