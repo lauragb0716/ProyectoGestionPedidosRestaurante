@@ -164,7 +164,7 @@ public class PedidoDao {
         PreparedStatement stmt = null;
 
         try{
-            stmt = JDBCUtilities.getConnection().prepareStatement("UPDATE FROM Pedido SET estado = ? WHERE id = ?;");
+            stmt = JDBCUtilities.getConnection().prepareStatement("UPDATE Pedido SET estado = ? WHERE id = ?;");
             stmt.setString(1, pedido.getEstado().toString());
             stmt.setInt(2, pedido.getId());
             stmt.executeUpdate();

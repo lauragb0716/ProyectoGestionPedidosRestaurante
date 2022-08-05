@@ -2,7 +2,7 @@ package co.edu.utp.misiontic2022.lgutierrez;
 
 import java.util.Scanner;
 
-import co.edu.utp.misiontic2022.lgutierrez.controlador.RestauranteContolador;
+import co.edu.utp.misiontic2022.lgutierrez.controlador.RestauranteControlador;
 
 /**
  * Hello world!
@@ -14,7 +14,7 @@ public final class App {
      */
     public static void main(String[] args) {
         try (var sc = new Scanner(System.in)) {
-            var controlador = new RestauranteContolador(sc);
+            var controlador = new RestauranteControlador(sc);
             controlador.iniciarAplicacion();
              
 

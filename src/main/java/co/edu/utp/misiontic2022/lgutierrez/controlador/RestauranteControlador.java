@@ -10,13 +10,17 @@ import co.edu.utp.misiontic2022.lgutierrez.modelo.*;
 import co.edu.utp.misiontic2022.lgutierrez.modelo.dao.*;
 import co.edu.utp.misiontic2022.lgutierrez.vista.*;
 
-public class RestauranteContolador {
+public class RestauranteControlador {
 
     private MenuPrincipal menuPrincipal;
     private MesaVista mesaVista;
     private PedidoVista pedidoVista;
+    private AdicionalVista adicionalVista;
 
     private MesaDao mesaDao;
+    private PedidoDao pedidoDao;
+    private AdicionalDao adicionalDao;
+
     //Se utiliza la plantilla de OpcionAlimentoDao para crear los objetos que se requieren
     private OpcionAlimentoDao<OpcionSopa> opcionSopaDao;
     private OpcionAlimentoDao<OpcionPrincipio> opcionPrincipioDao;
@@ -24,27 +28,34 @@ public class RestauranteContolador {
     private OpcionAlimentoDao<OpcionEnsalada> opcionEnsaladaDao;
     private OpcionAlimentoDao<OpcionJugo> opcionJugoDao;
 
-    private PedidoDao pedidoDao;
-
-    public RestauranteContolador(Scanner sc) {
+    public RestauranteControlador(Scanner sc) {
         this.menuPrincipal = new MenuPrincipal(sc, this);
         this.mesaVista = new MesaVista(sc, this);
         this.pedidoVista = new PedidoVista(sc, this);
+        this.adicionalVista = new AdicionalVista(sc, this);
         
         //Siempre los objetos se deben inicializar en el contructor
         this.mesaDao = new MesaDao();
+        this.pedidoDao = new PedidoDao();
+        this.adicionalDao = new AdicionalDao();
 
         this.opcionSopaDao = new OpcionAlimentoDao<>("OpcionSopa");
         this.opcionPrincipioDao = new OpcionAlimentoDao<>("OpcionPrincipio");
         this.opcionCarneDao = new OpcionAlimentoDao<>("OpcionCarne");
         this.opcionEnsaladaDao = new OpcionAlimentoDao<>("OpcionEnsalada");
         this.opcionJugoDao = new OpcionAlimentoDao<>("OpcionJugo");
-        
-        this.pedidoDao = new PedidoDao();
     }
 
     public List<Mesa> getMesas() throws SQLException {
         return mesaDao.listar();
+    }
+
+    public List<Pedido> getPedidos(Mesa mesa) throws SQLException {
+        return pedidoDao.listar(mesa);
+    }
+
+    public List<Adicional> getAdicional() throws SQLException {
+        return adicionalDao.listar();
     }
 
     public List<OpcionSopa> getSopas() throws SQLException {
@@ -169,11 +180,26 @@ public class RestauranteContolador {
         } catch(SQLException e){
             System.err.println("Error obteniendo pedidos: " + e.getMessage());
         }
-        
     }
 
-    public void agregarAdicional() {
-        //TODO: Realizar método
+    public void agregarAdicional(Mesa mesa) throws SQLException {
+        try{
+            // Pedir al usuario que escoja el pedido que le desea adicionar
+            var pedidos = pedidoDao.listar(mesa);
+            Pedido pedido = mesaVista.seleccionarPedido(pedidos);
+
+            
+            //Pedir al usuario que escoja el adicional que quiere
+            var adicional = adicionalVista.elegirAdicional();
+            
+            // Agregar el pedido a la mesa
+            adicionalDao.guardar(pedido, adicional);
+
+            // Mostrar confirmación de agregar el pedido
+            pedidoVista.mostrarMensaje(String.format("Se ha adicionado '%s', al pedido de %s", adicional, pedido.getCliente()));
+        } catch(SQLException e){
+            System.err.println("Error accediendo a la base de datos: " + e.getMessage());
+        }
     }
 
     public void pagarCuenta(Mesa mesa) {
@@ -211,4 +237,5 @@ public class RestauranteContolador {
     public void iniciarAplicacion() throws SQLException {
         menuPrincipal.iniciarAplicacion();
     }
+
 }

@@ -5,18 +5,18 @@ import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
-import co.edu.utp.misiontic2022.lgutierrez.controlador.RestauranteContolador;
+import co.edu.utp.misiontic2022.lgutierrez.controlador.RestauranteControlador;
 import co.edu.utp.misiontic2022.lgutierrez.modelo.Mesa;
 import co.edu.utp.misiontic2022.lgutierrez.modelo.Pedido;
 
 public class MesaVista {
 
     private Scanner sc;
-    private RestauranteContolador contolador;
+    private RestauranteControlador controlador;
 
-    public MesaVista(Scanner sc, RestauranteContolador contolador) {
+    public MesaVista(Scanner sc, RestauranteControlador controlador) {
         this.sc = sc;
-        this.contolador = contolador;
+        this.controlador = controlador;
     }
 
     public Mesa pedirInformacionMesa() {
@@ -35,7 +35,7 @@ public class MesaVista {
 
     public Mesa consultarMesa() throws SQLException {
         System.out.println("\n.: CONSULTANDO MESAS :.\n");
-        var opciones = contolador.getMesas();
+        var opciones = controlador.getMesas();
 
         do {
             try {

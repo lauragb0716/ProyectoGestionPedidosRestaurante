@@ -4,20 +4,18 @@ import java.sql.SQLException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-import co.edu.utp.misiontic2022.lgutierrez.controlador.RestauranteContolador;
+import co.edu.utp.misiontic2022.lgutierrez.controlador.RestauranteControlador;
 import co.edu.utp.misiontic2022.lgutierrez.modelo.*;
 
 public class PedidoVista {
-    /**
-     *
-     */
+
     private static final int PRECIO_CORRIENTAZO = 12_000;
     private Scanner sc;
-    private RestauranteContolador contolador;
+    private RestauranteControlador controlador;
 
-    public PedidoVista(Scanner sc, RestauranteContolador contolador) {
+    public PedidoVista(Scanner sc, RestauranteControlador controlador) {
         this.sc = sc;
-        this.contolador = contolador;
+        this.controlador = controlador;
     }
 
     public Pedido pedirInformacionPedido() throws SQLException {
@@ -41,7 +39,7 @@ public class PedidoVista {
 
     private OpcionSopa elegirOpcionSopa() throws SQLException {
         System.out.println("\n.: ELIJA LA OPCION DE SOPA :.\n");
-        var opciones = contolador.getSopas();
+        var opciones = controlador.getSopas();
 
         do {
             try {
@@ -73,7 +71,7 @@ public class PedidoVista {
 
     private OpcionPrincipio elegirOpcionPrincipio () throws SQLException {
         System.out.println("\n.: ELIJA LA OPCION DE PRINCIPIO :.\n");
-        var opciones = contolador.getPrincipios();
+        var opciones = controlador.getPrincipios();
 
         do {
             try {
@@ -105,7 +103,7 @@ public class PedidoVista {
 
     private OpcionCarne elegirOpcionCarne() throws SQLException {
         System.out.println("\n.: ELIJA LA OPCION DE CARNE :.\n");
-        var opciones = contolador.getCarnes();
+        var opciones = controlador.getCarnes();
 
         do {
             try {
@@ -137,7 +135,7 @@ public class PedidoVista {
 
     private OpcionEnsalada elegirOpcionEnsalada() throws SQLException {
         System.out.println("\n.: ELIJA LA OPCION DE ENSALADA :.\n");
-        var opciones = contolador.getEnsaladas();
+        var opciones = controlador.getEnsaladas();
 
         do {
             try {
@@ -171,7 +169,7 @@ public class PedidoVista {
 
     private OpcionJugo elegirOpcionJugo() throws SQLException {
         System.out.println("\n.: ELIJA LA OPCION DE JUGO :.\n");
-        var opciones = contolador.getJugos();
+        var opciones = controlador.getJugos();
 
         do {
             try {
@@ -200,4 +198,5 @@ public class PedidoVista {
 
         } while (true);
     }
+
 }

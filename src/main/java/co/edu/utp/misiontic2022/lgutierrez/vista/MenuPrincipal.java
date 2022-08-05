@@ -4,16 +4,16 @@ import java.sql.SQLException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-import co.edu.utp.misiontic2022.lgutierrez.controlador.RestauranteContolador;
+import co.edu.utp.misiontic2022.lgutierrez.controlador.RestauranteControlador;
 
 public class MenuPrincipal {
 
     private Scanner sc;
-    private RestauranteContolador controlador;
+    private RestauranteControlador controlador;
 
-    public MenuPrincipal(Scanner sc, RestauranteContolador contolador) {
+    public MenuPrincipal(Scanner sc, RestauranteControlador controlador) {
         this.sc = sc;
-        this.controlador = contolador;
+        this.controlador = controlador;
     }
 
     public void iniciarAplicacion() throws SQLException {
@@ -85,7 +85,7 @@ public class MenuPrincipal {
                         break;
                     case 3:
                         //TODO Implementar método 
-                        controlador.agregarAdicional();
+                        controlador.agregarAdicional(mesa);
                         salida = true;
                         break;
                     case 4:
