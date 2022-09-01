@@ -2,7 +2,7 @@ package co.edu.utp.misiontic2022.lgutierrez;
 
 import java.util.Scanner;
 
-import co.edu.utp.misiontic2022.lgutierrez.controlador.RestauranteControlador;
+import co.edu.utp.misiontic2022.lgutierrez.controlador.*;
 
 /**
  * Hello world!
